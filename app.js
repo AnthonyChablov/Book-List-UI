@@ -2,7 +2,7 @@
 class Book{
     constructor(title, author, ISBN){
         this.title = title;
-        this.Author = author;
+        this.author = author;
         this.ISBN = ISBN;
     }
 }
@@ -41,7 +41,7 @@ UI.prototype.showAlert = function(message, className){
     container.insertBefore(div, form);
 
     // Timeout after 3 sec
-    setTimeout(()=> document.querySelector('.alert').remove(), 3000);
+    setTimeout(()=> document.querySelector('.alert').remove(), 2400);
 
 
 }
@@ -70,7 +70,7 @@ let bookForm = document.getElementById('book-form').addEventListener('submit', (
     const ui = new UI();
 
     // Validate
-    if (title === '' || author === '' || ISBN === ''){
+    /* if (title === '' || author === '' || ISBN === ''){
         // show alert 
         ui.showAlert('Please fill in all fields', 'error');
     } else {
@@ -82,11 +82,11 @@ let bookForm = document.getElementById('book-form').addEventListener('submit', (
 
         // clear 
         ui.clear();
-    } 
+    }  */
 
-    /* title === '' || author === '' || ISBN == ''? 
-        alert('Please enter valid input') : 
-        ui.addBookToList(book), ui.clear(); */
+    title === '' || author === '' || ISBN == '' ? 
+        ui.showAlert('Please fill in all fields', 'error') : 
+        ui.addBookToList(book), ui.showAlert('Book Added', 'success'), ui.clear(); 
 
     
 
