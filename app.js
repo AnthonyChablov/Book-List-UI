@@ -1,5 +1,4 @@
-// Book constructor
-class Book{
+class Book{ // Book constructor
     constructor(title, author, ISBN){
         this.title = title;
         this.author = author;
@@ -7,88 +6,60 @@ class Book{
     }
 }
 
-// UI constructor
-class UI{}
-// prototype add book to list
-UI.prototype.addBookToList=function(book){
-    const list = document.getElementById('book-list');
-    // Create new tr element
-    const row = document.createElement('tr');
-    // insert columns
-    row.innerHTML = `
-        <td>${book.title}</td>
-        <td>${book.author}</td>
-        <td>${book.ISBN}</td>
-        <td><a href="#" class='delete'>X</a></td>
-    `;
-    list.appendChild(row);
-};
-// prototype show alert
-UI.prototype.showAlert = function(message, className){
-    const div = document.createElement('div');
-    
-    // add class
-    div.className = `alert ${className}`;
-    
-    // add text
-    div.appendChild(document.createTextNode(message));
-    
-    // Get parent
-    const container = document.querySelector('.container');
-    const form = document.querySelector('#book-form');
-    
-    // insert alert()
-    container.insertBefore(div, form);
+class UI{ // UI constructor
+    addBookToList(book){ // add book to list method
+        const list = document.getElementById('book-list');
+        const row = document.createElement('tr'); // Create new tr element
+        // insert columns
+        row.innerHTML = `
+            <td>${book.title}</td>
+            <td>${book.author}</td>
+            <td>${book.ISBN}</td>
+            <td><a href="#" class='delete'>X</a></td>
+        `;
+        list.appendChild(row);
+    }
+    showAlert(message, className){ // show alert method
+        const div = document.createElement('div'); // created div
+        div.className = `alert ${className}`; // add class
+        div.appendChild(document.createTextNode(message)); // add text
+        
+        const container = document.querySelector('.container'); // Get parent 
+        const form = document.querySelector('#book-form');
 
-    // Timeout after 3 sec
-    setTimeout(()=> document.querySelector('.alert').remove(), 2400);
-
-
-}
-
-
-// prototype clear
-UI.prototype.clear=function(){
-    // clear fields from form
-    document.getElementById('title').value ='',
-    document.getElementById('author').value ='',
-    document.getElementById('isbn').value ='';
-}
-// 
-
+        container.insertBefore(div, form); // insert alert()
+        setTimeout(()=> document.querySelector('.alert').remove(), 2400); // Timeout
+    }
+    deleteBook(target){ // delete book method
+        target.className === 'delete'? target.parentElement.parentElement.remove():'';
+    }
+    clear(){ // clear method
+        // clear fields from form
+        document.getElementById('title').value ='',
+        document.getElementById('author').value ='',
+        document.getElementById('isbn').value ='';
+    }
+} 
 
 // Event Listeners
+// Add Book
 let bookForm = document.getElementById('book-form').addEventListener('submit', (e) => {
-    // get form values
-    let title = document.getElementById('title').value,
+    let title = document.getElementById('title').value, // get form values 
         author = document.getElementById('author').value,
         ISBN = document.getElementById('isbn').value;
-    // instantiate book
-    const book = new Book(title, author, ISBN);
-
-    // instantiate ui
+    const book = new Book(title, author, ISBN); // instantiate book
+    const ui = new UI(); // instantiate ui
+    title === '' || author === '' || ISBN == '' ? // Validation of entered books
+        ui.showAlert('Please fill in all fields', 'error') : // show alert 
+        ui.addBookToList(book), ui.showAlert('Book Added', 'success'), ui.clear(); // show success
+    e.preventDefault(); // prevent default state
+});
+// Delete Book
+let bookList = document.querySelector('#book-list').addEventListener
+('click', (e)=>{
     const ui = new UI();
-
-    // Validate
-    /* if (title === '' || author === '' || ISBN === ''){
-        // show alert 
-        ui.showAlert('Please fill in all fields', 'error');
-    } else {
-        // add book to list
-        ui.addBookToList(book);
-
-        // show success
-        ui.showAlert('Book Added', 'success');
-
-        // clear 
-        ui.clear();
-    }  */
-
-    title === '' || author === '' || ISBN == '' ? 
-        ui.showAlert('Please fill in all fields', 'error') : 
-        ui.addBookToList(book), ui.showAlert('Book Added', 'success'), ui.clear(); 
-
-    
-
+    ui.deleteBook(e.target);
+    // show confirmation msg that book has been deleted
+    ui.showAlert('Book Removed!', 'success');
     e.preventDefault();
 });
